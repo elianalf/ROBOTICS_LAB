@@ -16,11 +16,11 @@ bool fibonacci_callback(ros_fibonacci::service::Request &req, ros_fibonacci::ser
   if((req.i+req.l)==1){
      res.seq.push_back(first);
   }
-  else if((req.i==0) && (req.l==2){
+  else if((req.i==0) && (req.l==2)){
   res.seq.push_back(first);
   res.seq.push_back(second);
   }
-  else if((req.i==1) && (req.l==1){
+  else if((req.i==1) && (req.l==1)){
   res.seq.push_back(second);
   }
   else{
