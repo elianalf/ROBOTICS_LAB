@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <package format="2">
-  <name>rl_robot_kuka_pkg</name>
+  <name>rl_robot_kuka_slider_pkg</name>
   <version>0.0.0</version>
   <description>The rl_robot_kuka_slider_pkg package</description>
 
