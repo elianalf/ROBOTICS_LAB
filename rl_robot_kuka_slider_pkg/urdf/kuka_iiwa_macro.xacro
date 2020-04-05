@@ -38,6 +38,17 @@
 		</joint>
 	</xacro:macro>
 
+   <xacro:macro name="kuka_prismatic_joint" params="name type parent child *origin *axis *limit">
+		<joint name="${name}" type="${type}">
+			<parent link="${parent}" />
+			<child link="${child}" />
+	    <xacro:insert_block name="origin" />
+			<xacro:insert_block name="axis" />
+	    <xacro:insert_block name="limit" />
+	    <dynamics damping="50" friction="1"/>
+		</joint>
+	</xacro:macro>
+	
 	<xacro:macro name="kuka_link" params="name *geometry *origin">
 		<link name="${name}">
 			<visual>

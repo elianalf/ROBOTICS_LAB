@@ -1,8 +1,21 @@
 <?xml version="1.0"?>
 
 <robot name="kuka_iiwa" xmlns:xacro="http://wiki.ros.org/xacro">
-    <xacro:include filename="$(find rl_robot_kuka_pkg)/urdf/kuka_iiwa_macro.xacro" />
-	
+    <xacro:include filename="$(find rl_robot_kuka_slider_pkg)/urdf/kuka_iiwa_macro.xacro" />
+	   <xacro:base_link_macro 
+			base_link_name="ground">
+		</xacro:base_link_macro>
+		
+		<xacro:kuka_prismatic_joint
+			name="slider"
+			type="prismatic"
+			parent="ground"
+			child="base_link">
+			<origin xyz="0 0 0" />
+			<axis xyz="1 0 0"/>
+			<limit effort="300" velocity="0.1" lower="-1" upper="1"/>
+		</xacro:kuka_prismatic_joint>
+		
 		<xacro:base_link_macro 
 			base_link_name="base_link">
 		</xacro:base_link_macro>
@@ -108,15 +121,15 @@
 			type="revolute"
 			parent="six_link"
 			child="seven_link">
-			<origin xyz="0 0 0.03" />
-			<axis xyz="0 1 0"/>
+			<origin xyz="0 -0.05 0.03" />
+			<axis xyz="0 0 1"/>
 		</xacro:kuka_joint>
 
 		<xacro:kuka_link name="seven_link">
 			<geometry>
 				<cylinder length="0.2" radius="0.04"/>
 			</geometry>
-			<origin xyz="0 -0.05 0.1" rpy="0 0 0"/>
+			<origin xyz="0 0 0.1" rpy="0 0 0"/>
 		</xacro:kuka_link>
 
 
