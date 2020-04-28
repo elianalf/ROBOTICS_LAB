@@ -17,8 +17,8 @@ class SURV_CLIENT {
         void laser_cb( sensor_msgs::LaserScanConstPtr );
         void odom_cb( nav_msgs::OdometryConstPtr );
         void run();
-			void main_loop();
-			int teaching_cb(int);
+	void main_loop();
+	int teaching_cb(int);
 				
     private:
         ros::NodeHandle _nh;
@@ -33,8 +33,7 @@ class SURV_CLIENT {
 
 
 SURV_CLIENT::SURV_CLIENT() {
-
-   //_human_cb = _nh.subscribe("/cmd_vel/key", 0, &SURV_CLIENT::keyabord_cb,this);
+  
     _laser_sub = _nh.subscribe("/laser/scan",0,&SURV_CLIENT::laser_cb,this);
     _odom_sub = _nh.subscribe("/odom", 0, &SURV_CLIENT::odom_cb, this);
    obstacles=false;
@@ -46,53 +45,53 @@ SURV_CLIENT::SURV_CLIENT() {
 
 int SURV_CLIENT::teaching_cb( int index ) {
 
-	string input;
+   string input;
    bool teaching_done = false;
    int first=0;
    geometry_msgs::Twist cmd_vel;
    float _fv; //Forward velocity	
-	float _rv; //Rotational velocity
+   float _rv; //Rotational velocity
 	
 	std::vector<geometry_msgs::Point >::iterator itp;
 	
 	//activate keyboard mode
-	cout << "Keyboard Input: " << endl;
-	cout << "[w]: Forward direction velocity" << endl;
-	cout << "[x]: Backward direction velocity" << endl;
-	cout << "[a]: Left angular velocity" << endl;
-	cout << "[d]: Right angular velocity" << endl;
-	cout << "[s]: Stop the robot and save position" << endl;
+   cout << "Keyboard Input: " << endl;
+   cout << "[w]: Forward direction velocity" << endl;
+   cout << "[x]: Backward direction velocity" << endl;
+   cout << "[a]: Left angular velocity" << endl;
+   cout << "[d]: Right angular velocity" << endl;
+   cout << "[s]: Stop the robot and save position" << endl;
    cout << "[f]: Teaching completed!" << endl;
    
    ros::Rate r(10);
    while(!teaching_done){
         
-		getline( cin, input);
+	getline( cin, input);
 
-		if( input == "w" ) 
-			_fv = (_fv < 0.0 ) ? 0.0 : LIN_VEL;
-		else if( input == "x" ) 
-			_fv = (_fv > 0.0 ) ? 0.0 : -LIN_VEL;
-		else if( input == "a" ) 
-			_rv = (_rv > 0.0 ) ? 0.0 : -ANG_VEL;
-		else if( input == "d" )
-			_rv = (_rv < 0.0 ) ? 0.0 : ANG_VEL;
-		else if( input == "s" ){
-		      _fv = _rv = 0.0;
-		      itp = point_list.begin() + index ;
+	if( input == "w" ) 
+		_fv = (_fv < 0.0 ) ? 0.0 : LIN_VEL;
+	else if( input == "x" ) 
+		_fv = (_fv > 0.0 ) ? 0.0 : -LIN_VEL;
+	else if( input == "a" ) 
+		_rv = (_rv > 0.0 ) ? 0.0 : -ANG_VEL;
+	else if( input == "d" )
+		_rv = (_rv < 0.0 ) ? 0.0 : ANG_VEL;
+	else if( input == "s" ){
+             _fv = _rv = 0.0;
+	     itp = point_list.begin() + index ;
             point_list.insert(itp,1, odom_pos);
              //cout<<"added new point"<<endl;
             index++;
-		}
+	}
       else if(input == "f"){
             teaching_done = true;
        }  
     
-     cmd_vel.linear.x = _fv;
-	  cmd_vel.angular.z = _rv;
-	  vel_pub.publish( cmd_vel );
+       cmd_vel.linear.x = _fv;
+	cmd_vel.angular.z = _rv;
+       vel_pub.publish( cmd_vel );
 	  
-	  r.sleep();
+       r.sleep();
    }
    
    index = index-1;
@@ -172,14 +171,14 @@ void SURV_CLIENT::main_loop() {
 		             }
              }
              	//sent to the robot the human generated velocity						
-					//until human operator terminates with an additional input            
+			//until human operator terminates with an additional input            
 	          if( obstacles ) {
                         //cout << "Send cancel goal" << endl;
-								ac.cancelGoal();		
-								cout << "Keyboard_teleoperation mode on" << endl;
-								i=teaching_cb(i);
-								cout << "Teaching done" << endl;
-								obstacles = false;
+				ac.cancelGoal();		
+				cout << "Keyboard_teleoperation mode on" << endl;
+				i=teaching_cb(i);
+				cout << "Teaching done" << endl;
+				obstacles = false;
 								               					
                }
 	       
