@@ -18,9 +18,9 @@ using namespace std;
 
 namespace gazebo
 {
-   class CLIK_traj : public ModelPlugin
-   {
-      private:
+   class CLIK_traj : public ModelPlugin {
+  
+    private:
           ros::NodeHandle* nh;
 	       physics::ModelPtr model;
 	       
@@ -33,6 +33,7 @@ namespace gazebo
           int joint_num;
           KDL::Tree iiwa_tree;
           KDL::Chain k_chain;
+          
           KDL::ChainFkSolverPos_recursive *fksolver;
           KDL::ChainIkSolverVel_pinv *ik_solver_vel;   	//Inverse velocity solver
           KDL::ChainIkSolverPos_NR *ik_solver_pos;
@@ -78,7 +79,7 @@ namespace gazebo
    
    void CLIK_traj::Load(physics::ModelPtr parent, sdf::ElementPtr _sdf){
         //setup plugin
-        nh=new ros::NodeHandle();
+        nh = new ros::NodeHandle();
         model=parent;
         
         this->updateConnection = event::Events::ConnectWorldUpdateBegin(std::bind(&CLIK_traj::OnUpdate, this));
@@ -98,8 +99,9 @@ namespace gazebo
         cmd_pub[5] = nh->advertise< std_msgs::Float64 > ("/lbr_iiwa/joint6_position_controller/command", 0);
         cmd_pub[6] = nh->advertise< std_msgs::Float64 > ("/lbr_iiwa/joint7_position_controller/command", 0);
         
+        cartpose_pub = nh->advertise<geometry_msgs::Pose>("/lbr_iiwa/eef_pose",0);
         
-        traj_sub = nh->subscribe("/nav/path",0 , &CLIK_traj::traj_cb,this);
+        traj_sub = nh->subscribe("/nav/path",0 , &CLIK_traj::traj_cb, this);
         
         for(int i=0;i<7; i++){
             joint_handler[i]= this->model->GetJoint("lbr_iiwa_joint" + std::to_string(i+1) ); //initialize joint_handlers with the name of joint in the gazebo model to directly get the joints position from gazebo model 
@@ -111,6 +113,7 @@ namespace gazebo
    
    bool CLIK_traj::initIK(){
         std::string robot_desc_string;
+        
         nh->param("robot_description", robot_desc_string, std::string());
         if(!kdl_parser::treeFromString(robot_desc_string, iiwa_tree)){
             ROS_ERROR("FAILED to construct kdl tree ");
@@ -196,7 +199,7 @@ namespace gazebo
         
         cartpose_pub.publish(cpose);
         
-        if(new_traj){
+        if(new_traj){  
             boost::thread perform_traj_t(&CLIK_traj::perform_traj,this);
             new_traj=false;
         }
