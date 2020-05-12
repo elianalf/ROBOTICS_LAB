@@ -23,14 +23,16 @@ int main(int argc, char **argv){
    ros::NodeHandle nh;
    ros::Publisher pub;
    ros::Subscriber sub;
-   sub = nh.subscribe("/lbr_iiwa/eef_pose", 0 , c_pose_cb);
+   sub = nh.subscribe("/lbr_iiwa/eef_pose", 0 , c_pose_cb); //get the cartisian pose from gazebo
    pub = nh.advertise<nav_msgs::Path> ("/nav/path",0); //The topic is defined by the plugin to send the desired postion
+   cout<<"Begin "<<endl;
    
    while(!first_eef_pose){
       usleep(0.1*1e6);
-      ros::spinOnce();
-   
+      ros::spinOnce(); 
    }
+   
+   cout<<"first_eef_pose true"<<endl;
    
    ros::Rate rate(300);
    geometry_msgs::Pose pose;
@@ -62,6 +64,7 @@ int main(int argc, char **argv){
                    float64 y
                    float64 z
                    float64 w      */
+    cout<<"Start the while"<<endl;
      
    while((des_p - curr_p).norm() > 0.001){
       curr_p+= dir*(1.0/300.0);
@@ -73,9 +76,10 @@ int main(int argc, char **argv){
       p.poses.push_back(c_p);
       rate.sleep();
    }
-   pub.publish(p);
    
-
+   pub.publish(p); //publish the vector of the discrete trajectory
+   
+cout<<"Publish"<<endl;
 
 
 }
